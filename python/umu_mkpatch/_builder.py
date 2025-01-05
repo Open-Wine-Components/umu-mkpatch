@@ -8,9 +8,10 @@ from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any
 
-from _types import FileType, Item, Manifest
 from pyzstd import CParameter, ZstdDict, compress
 from xxhash import xxh3_64_intdigest
+
+from ._types import FileType, Item, Manifest
 
 # Similarity ratio of two file names.
 # If two files are below the similarity ratio, then they're assumed to be

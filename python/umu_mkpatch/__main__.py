@@ -6,12 +6,13 @@ from hashlib import sha512
 from io import BufferedRandom
 from pathlib import Path
 
-from _builder import Builder
-from _types import CustomDataItem, CustomDataItemContainer
-from _util import compare_directories, get_versioned_subdirectories
 from cbor2 import CBORTag, dump, dumps, load
 
 import umu_mkpatch
+
+from ._builder import Builder
+from ._types import CustomDataItem, CustomDataItemContainer
+from ._util import compare_directories, get_versioned_subdirectories
 
 # CBOR tag used to create a file identified as CBOR by the Linux file utility
 # https://www.rfc-editor.org/rfc/rfc8949.html#self-describe
