@@ -5,7 +5,7 @@ on:
     branches:
       - main
     tags:
-      - '*'
+      - "*"
   pull_request:
   workflow_dispatch:
 
@@ -15,6 +15,10 @@ permissions:
 jobs:
   linux:
     runs-on: ${{ matrix.platform.runner }}
+    permissions:
+      id-token: write
+      contents: write
+      attestations: write
     strategy:
       matrix:
         platform:
@@ -32,13 +36,17 @@ jobs:
         with:
           target: ${{ matrix.platform.target }}
           args: --release --out dist --find-interpreter --manifest-path ./Cargo.toml
-          sccache: 'true'
+          sccache: "true"
           manylinux: auto
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
           name: wheels-linux-${{ matrix.platform.target }}
           path: dist
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: dist/*
 
   sdist:
     runs-on: ubuntu-24.04
@@ -69,4 +77,4 @@ jobs:
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v1
         with:
-          subject-path: 'wheels-*/*'
+          subject-path: "wheels-*/*"
