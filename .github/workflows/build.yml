@@ -62,19 +62,3 @@ jobs:
         with:
           name: wheels-sdist
           path: dist
-
-  release:
-    name: Release
-    runs-on: ubuntu-24.04
-    if: ${{ startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch' }}
-    needs: [linux, sdist]
-    permissions:
-      id-token: write
-      contents: write
-      attestations: write
-    steps:
-      - uses: actions/download-artifact@v4
-      - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v1
-        with:
-          subject-path: "wheels-*/*"
