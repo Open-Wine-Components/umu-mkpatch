@@ -11,7 +11,3 @@ crate-type = ["cdylib"]
 [dependencies]
 pyo3 = { version = "0.23.3", features = ["extension-module"] }
 ssh-key = { version = "0.6.7", features = ["ed25519"] }
-
-[profile.release]
-lto = true
-opt-level = 2
