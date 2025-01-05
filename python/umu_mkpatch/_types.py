@@ -50,4 +50,4 @@ class CustomDataItem(TypedDict):
 class CustomDataItemContainer(TypedDict):
     contents: list[CustomDataItem]
     signature: tuple[bytes, bytes]
-    public_key: tuple[bytes, bytes]
+    public_key: tuple[str, bytes]
