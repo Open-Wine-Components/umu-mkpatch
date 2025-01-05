@@ -17,6 +17,9 @@ dependencies = ["cbor2", "pyzstd", "xxhash"]
 python-source = "python"
 features = ["pyo3/extension-module"]
 
+[project.scripts]
+umu-mkpatch = "umu_mkpatch:__main__.main"
+
 [tool.ruff]
 exclude = [
     ".bzr",
