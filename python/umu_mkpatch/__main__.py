@@ -98,8 +98,8 @@ def build_patch(
 
         item_container: CustomDataItemContainer = {
             "contents": data_items,
-            "signature": sig.encode(encoding="utf-8"),
-            "public_key": Path(public_key).resolve().read_text(encoding="utf-8"),
+            "signature": (sig.encode(encoding="utf-8"), b""),
+            "public_key": (Path(public_key).resolve().read_bytes(), b""),
         }
 
         return item_container
@@ -112,7 +112,11 @@ def verify_patch(fp: BufferedRandom) -> None:
 
     # Verify the message
     try:
-        umu_mkpatch.ssh_verify(cbor["public_key"], message, cbor["signature"])
+        umu_mkpatch.ssh_verify(
+            cbor["public_key"][0].decode(encoding="utf-8"),
+            message,
+            cbor["signature"][0],
+        )
     except OSError as e:
         err = "Digital signature verification failed"
         raise ValueError(err) from e
