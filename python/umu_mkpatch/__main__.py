@@ -8,11 +8,10 @@ from pathlib import Path
 
 from cbor2 import CBORTag, dump, dumps, load
 
-import umu_mkpatch
-
 from ._builder import Builder
 from ._types import CustomDataItem, CustomDataItemContainer
 from ._util import compare_directories, get_versioned_subdirectories
+from .umu_mkpatch import ssh_sign, ssh_verify
 
 # CBOR tag used to create a file identified as CBOR by the Linux file utility
 # https://www.rfc-editor.org/rfc/rfc8949.html#self-describe
@@ -90,9 +89,7 @@ def build_patch(
 
         try:
             with Path(private_key).resolve().open("rb") as fp:
-                sig: str = umu_mkpatch.ssh_sign(
-                    fp.read(), dumps(data_items, canonical=True)
-                )
+                sig: str = ssh_sign(fp.read(), dumps(data_items, canonical=True))
         except FileNotFoundError as e:
             err = f"Failed opening SSH private key: {private_key}"
             raise FileNotFoundError(err) from e
@@ -113,7 +110,7 @@ def verify_patch(fp: BufferedRandom) -> None:
 
     # Verify the message
     try:
-        umu_mkpatch.ssh_verify(cbor["public_key"][0], message, cbor["signature"][0])
+        ssh_verify(cbor["public_key"][0], message, cbor["signature"][0])
     except OSError as e:
         err = "Digital signature verification failed"
         raise ValueError(err) from e
