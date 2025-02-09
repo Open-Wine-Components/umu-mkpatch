@@ -203,6 +203,13 @@ class Builder:
         if ftype not in {FileType.File, FileType.Link}:
             return self._difference_section
 
+        # When the original file is a link, delete it and insert the new data
+        left = Path(f"{dirs.left}/{file}")
+        if ftype == FileType.File and left.is_symlink():
+            left.unlink(missing_ok=True)
+            self._create_new_content(dirs, file, base)
+            return self._difference_section
+
         if ftype == FileType.File:
             with (
                 open(f"{dirs.right}/{file}", "rb") as right,
