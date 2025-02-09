@@ -5,7 +5,7 @@ build-backend = "maturin"
 [project]
 name = "umu-mkpatch"
 requires-python = ">=3.11"
-version = "0.1.2"
+version = "0.1.3"
 classifiers = [
     "Programming Language :: Rust",
     "Programming Language :: Python :: Implementation :: CPython",
