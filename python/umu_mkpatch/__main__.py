@@ -75,6 +75,8 @@ def build_patch(
         for left, right in get_versioned_subdirectories(str(src), str(target)):
             builders.append(Builder(str(left), str(right), thread_pool))
 
+        builders.reverse()
+
         for builder in builders:
             builder.build()
             item: CustomDataItem = {
@@ -86,6 +88,20 @@ def build_patch(
                 "target": builder.get_target_base(),
             }
             data_items.append(item)
+
+        # Remove duplicate manifest entries across data items. All files in
+        # each versioned subdirectory are a subset of the compatibility tool
+        # set. Therefore, recomputing the digest for those versioned subdir
+        # objects are redundant when verifying the state on delta update
+        items = set()
+        for data_item in data_items:
+            manifest = []
+            for manifest_item in data_item["manifest"]:
+                if manifest_item["xxhash"] not in items:
+                    items.add(manifest_item["xxhash"])
+                    manifest.append(manifest_item)
+                    continue
+            data_item["manifest"] = manifest
 
         try:
             with Path(private_key).resolve().open("rb") as fp:

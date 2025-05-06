@@ -51,6 +51,11 @@ def get_versioned_subdirectories(src: str, target: str) -> list[tuple[str, str]]
 
                 subdirectories.append((str(lefts), str(name)))
 
+    if subdirectories:
+        for subdir in subdirectories:
+            left, right = subdir
+            subdirectories.extend(get_versioned_subdirectories(left, right))
+
     return subdirectories
 
 
