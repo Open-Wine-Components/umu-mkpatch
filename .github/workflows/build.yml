@@ -44,7 +44,7 @@ jobs:
           name: wheels-linux-${{ matrix.platform.target }}
           path: dist
       - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v3
         with:
           subject-path: dist/*
 
